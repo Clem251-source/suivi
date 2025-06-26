@@ -63,16 +63,17 @@
           retards: parseInt(document.querySelector("[name='Bernard_ret']").value) || 0
         }
       ];
-fetch(urlScript, {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "text/plain"
-  },
-  body: JSON.stringify(data)
-})
-.then(() => alert("Données envoyées (mode no-cors)."))
-.catch(err => alert("Erreur d'envoi : " + err));
+
+      fetch(urlScript, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => alert("Données envoyées vers Google Sheets."))
+      .catch(err => alert("Erreur d'envoi : " + err));
     });
 
     function chargerDepuisSheets() {
