@@ -1,0 +1,65 @@
+<p></p>
+<p></p>
+<h1>Envoi des absences et retards</h1>
+<form id="suiviForm">
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Absences</th>
+<th>Retards</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Joli</td>
+<td><input type="number" name="Joli_abs" min="0" value="0" /></td>
+<td><input type="number" name="Joli_ret" min="0" value="0" /></td>
+</tr>
+<tr>
+<td>Beau</td>
+<td><input type="number" name="Beau_abs" min="0" value="0" /></td>
+<td><input type="number" name="Beau_ret" min="0" value="0" /></td>
+</tr>
+<tr>
+<td>Bernard</td>
+<td><input type="number" name="Bernard_abs" min="0" value="0" /></td>
+<td><input type="number" name="Bernard_ret" min="0" value="0" /></td>
+</tr>
+</tbody>
+</table>
+<button type="submit">Envoyer vers Google Sheets</button></form>
+<p>
+<script>
+    document.getElementById("suiviForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const data = [
+        {
+          nom: "Joli",
+          absences: parseInt(document.querySelector("[name='Joli_abs']").value) || 0,
+          retards: parseInt(document.querySelector("[name='Joli_ret']").value) || 0
+        },
+        {
+          nom: "Beau",
+          absences: parseInt(document.querySelector("[name='Beau_abs']").value) || 0,
+          retards: parseInt(document.querySelector("[name='Beau_ret']").value) || 0
+        },
+        {
+          nom: "Bernard",
+          absences: parseInt(document.querySelector("[name='Bernard_abs']").value) || 0,
+          retards: parseInt(document.querySelector("[name='Bernard_ret']").value) || 0
+        }
+      ];
+
+      fetch("https://script.google.com/macros/s/AKfycbwCiHWKcTKy98TRBGwLPuMxxXYyup2KSDWIqozqHqmFD3M6R4UKq2lvwVmNV2CLdBv3/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(text => alert("Données envoyées avec succès."))
+      .catch(err => alert("Erreur d'envoi : " + err));
+    });
+  </script>
+</p>
