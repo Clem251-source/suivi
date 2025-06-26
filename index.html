@@ -1,36 +1,48 @@
-<p></p>
-<p></p>
-<h1>Envoi des absences et retards</h1>
-<form id="suiviForm">
-<table>
-<thead>
-<tr>
-<th>Nom</th>
-<th>Absences</th>
-<th>Retards</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Joli</td>
-<td><input type="number" name="Joli_abs" min="0" value="0" /></td>
-<td><input type="number" name="Joli_ret" min="0" value="0" /></td>
-</tr>
-<tr>
-<td>Beau</td>
-<td><input type="number" name="Beau_abs" min="0" value="0" /></td>
-<td><input type="number" name="Beau_ret" min="0" value="0" /></td>
-</tr>
-<tr>
-<td>Bernard</td>
-<td><input type="number" name="Bernard_abs" min="0" value="0" /></td>
-<td><input type="number" name="Bernard_ret" min="0" value="0" /></td>
-</tr>
-</tbody>
-</table>
-<button type="submit">Envoyer vers Google Sheets</button></form>
-<p>
-<script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Suivi des Absences</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button { margin: 5px; padding: 8px; }
+    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <h1>Envoi des absences et retards</h1>
+  <form id="suiviForm">
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Absences</th><th>Retards</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Joli</td>
+          <td><input type="number" name="Joli_abs" min="0" value="0"></td>
+          <td><input type="number" name="Joli_ret" min="0" value="0"></td>
+        </tr>
+        <tr>
+          <td>Beau</td>
+          <td><input type="number" name="Beau_abs" min="0" value="0"></td>
+          <td><input type="number" name="Beau_ret" min="0" value="0"></td>
+        </tr>
+        <tr>
+          <td>Bernard</td>
+          <td><input type="number" name="Bernard_abs" min="0" value="0"></td>
+          <td><input type="number" name="Bernard_ret" min="0" value="0"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="submit">Envoyer vers Google Sheets</button>
+    <button type="button" onclick="chargerDepuisSheets()">Lire depuis Google Sheets</button>
+  </form>
+
+  <script>
+    const urlScript = "https://script.google.com/macros/s/AKfycbytQMttrv5BntIREoYqD1hIE6uVBoMIXgSkRX2B7H-KRf6yTft_jK92LbG7I9qXayUT/exec";
+
     document.getElementById("suiviForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
@@ -52,7 +64,7 @@
         }
       ];
 
-      fetch("https://script.google.com/macros/s/AKfycbwCiHWKcTKy98TRBGwLPuMxxXYyup2KSDWIqozqHqmFD3M6R4UKq2lvwVmNV2CLdBv3/exec", {
+      fetch(urlScript, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -61,5 +73,21 @@
       .then(text => alert("Données envoyées avec succès."))
       .catch(err => alert("Erreur d'envoi : " + err));
     });
+
+    function chargerDepuisSheets() {
+      fetch(urlScript)
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(eleve => {
+            const absField = document.querySelector(`[name='${eleve.nom}_abs']`);
+            const retField = document.querySelector(`[name='${eleve.nom}_ret']`);
+            if (absField) absField.value = eleve.absences;
+            if (retField) retField.value = eleve.retards;
+          });
+          alert("Données chargées depuis Google Sheets.");
+        })
+        .catch(err => alert("Erreur de lecture : " + err));
+    }
   </script>
-</p>
+</body>
+</html>
